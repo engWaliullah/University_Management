@@ -1,44 +1,67 @@
 import { model, Schema } from 'mongoose';
-import { Student } from './student/student.interface';
+import {
+  Gurdian,
+  LocalGurdian,
+  Student,
+  UserName,
+} from './student/student.interface';
+
+const NameSchema = new Schema<UserName>({
+  firstName: {
+    type: String,
+    required: true,
+  },
+  middleName: {
+    type: String,
+  },
+  lastName: {
+    type: String,
+    required: true,
+  },
+});
+
+const GurdianSchema = new Schema<Gurdian>({
+  fatherName: { type: String, required: true },
+  fatherOccupation: { type: String, required: true },
+  fatherContactNo: { type: String, required: true },
+  motherName: { type: String, required: true },
+  motherOccupation: { type: String, required: true },
+  motherContactNo: { type: String, required: true },
+});
+
+const LocalGurdianSchema = new Schema<LocalGurdian>({
+  name: { type: String, required: true },
+  occupation: { type: String, required: true },
+  address: { type: String, required: true },
+});
 
 const StudentSchema = new Schema<Student>({
   id: { type: String },
-  name: {
-    firstName: {
-      type: String,
-      required: true,
-    },
-    middleName: {
-      type: String,
-    },
-    lastName: {
-      type: String,
-      required: true,
-    },
+  name: NameSchema,
+  gender: {
+    type: String,
+    enum: ['Female', 'Male'],
+    required: true,
   },
-  gender: ['Female', 'Male'],
   dateOfBirth: { type: String },
-  email: { text: String, required: true },
-  bloodGroup: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'],
-  contactNo: { text: String, required: true },
-  emergencyContactNo: { text: String, required: true },
-  currentAddress: { text: String, required: true },
-  permanentAddress: { text: String, required: true },
-  gurdian: {
-    fatherName: { text: String, required: true },
-    fatherOccupation: { text: String, required: true },
-    fatherContactNo: { text: String, required: true },
-    motherName: { text: String, required: true },
-    motherOccupation: { text: String, required: true },
-    motherContactNo: { text: String, required: true },
+  email: { type: String, required: true },
+  bloodGroup: {
+    type: String,
+    enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'],
+    required: true,
   },
-  localGurdian: {
-    name: { text: String, required: true },
-    occupation: { text: String, required: true },
-    address: { text: String, required: true },
-  },
+  contactNo: { type: String, required: true },
+  emergencyContactNo: { type: String, required: true },
+  currentAddress: { type: String, required: true },
+  permanentAddress: { type: String, required: true },
+  gurdian: GurdianSchema,
+  localGurdian: LocalGurdianSchema,
   profileImage: { type: String },
-  active: ['active', 'blocked'],
+  active: {
+    type: String,
+    enum: ['active', 'blocked'],
+    default: 'active',
+  },
 });
 
-const Studetn = model<Student>('Student', StudentSchema);
+export const StudentModel = model<Student>('Student', StudentSchema);
