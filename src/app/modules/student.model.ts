@@ -9,14 +9,23 @@ import {
 const NameSchema = new Schema<UserName>({
   firstName: {
     type: String,
-    required: true,
+    required: [true, 'First Name is required'],
+    trim: true,
+    maxlength: [20, 'First name cannot be more than 20 characters'],
+    validate: {
+      validator: function (value) {
+        const firstNameStr = value.charAt(0).toUpperCase() + value.slice(1);
+        return firstNameStr === value;
+      },
+      message: '{VALUE} is not capitalize formate',
+    },
   },
   middleName: {
     type: String,
   },
   lastName: {
     type: String,
-    required: true,
+    required: [true, 'last Name is required'],
   },
 });
 
@@ -37,14 +46,17 @@ const LocalGurdianSchema = new Schema<LocalGurdian>({
 
 const StudentSchema = new Schema<Student>({
   id: { type: String },
-  name: NameSchema,
+  name: {
+    type: NameSchema,
+    required: true,
+  },
   gender: {
     type: String,
-    enum: ['Female', 'Male'],
+    enum: { values: ['Female', 'Male'], message: '{VALUE} is not valid' },
     required: true,
   },
   dateOfBirth: { type: String },
-  email: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
   bloodGroup: {
     type: String,
     enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'],
@@ -54,8 +66,14 @@ const StudentSchema = new Schema<Student>({
   emergencyContactNo: { type: String, required: true },
   currentAddress: { type: String, required: true },
   permanentAddress: { type: String, required: true },
-  gurdian: GurdianSchema,
-  localGurdian: LocalGurdianSchema,
+  gurdian: {
+    type: GurdianSchema,
+    required: true,
+  },
+  localGurdian: {
+    type: LocalGurdianSchema,
+    required: true,
+  },
   profileImage: { type: String },
   active: {
     type: String,
