@@ -1,6 +1,6 @@
 export type UserName = {
   firstName: string;
-  middleName: string;
+  middleName?: string;
   lastName: string;
 };
 
@@ -25,7 +25,7 @@ export type Student = {
   gender: 'Male' | 'Female';
   dateOfBirth?: string;
   email: string;
-  bloodGroup: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-';
+  bloodGroup?: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-';
   contactNo: string;
   emergencyContactNo: string;
   currentAddress: string;

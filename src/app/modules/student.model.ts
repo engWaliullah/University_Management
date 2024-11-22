@@ -12,13 +12,13 @@ const NameSchema = new Schema<UserName>({
     required: [true, 'First Name is required'],
     trim: true,
     maxlength: [20, 'First name cannot be more than 20 characters'],
-    validate: {
-      validator: function (value: string) {
-        const firstNameStr = value.charAt(0).toUpperCase() + value.slice(1);
-        return firstNameStr === value;
-      },
-      message: '{VALUE} is not capitalize formate',
-    },
+    // validate: {
+    //   validator: function (value: string) {
+    //     const firstNameStr = value.charAt(0).toUpperCase() + value.slice(1);
+    //     return firstNameStr === value;
+    //   },
+    //   message: '{VALUE} is not capitalize formate',
+    // },
   },
   middleName: {
     type: String,
@@ -52,7 +52,7 @@ const StudentSchema = new Schema<Student>({
   },
   gender: {
     type: String,
-    enum: { values: ['Female', 'Male'], message: '{VALUE} is not valid' },
+    enum: ['Female', 'Male'],
     required: true,
   },
   dateOfBirth: { type: String },
@@ -60,7 +60,6 @@ const StudentSchema = new Schema<Student>({
   bloodGroup: {
     type: String,
     enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'],
-    required: true,
   },
   contactNo: { type: String, required: true },
   emergencyContactNo: { type: String, required: true },
