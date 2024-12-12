@@ -47,43 +47,55 @@ const LocalGurdianSchema = new Schema<TLocalGurdian>({
   address: { type: String, required: true },
 });
 
-const StudentSchema = new Schema<TStudent, StudentModel>({
-  id: { type: String },
-  password: { type: String, required: true },
-  name: {
-    type: NameSchema,
-    required: true,
+const StudentSchema = new Schema<TStudent, StudentModel>(
+  {
+    id: { type: String },
+    password: { type: String, required: true },
+    name: {
+      type: NameSchema,
+      required: true,
+    },
+    gender: {
+      type: String,
+      enum: ['Female', 'Male'],
+      required: true,
+    },
+    dateOfBirth: { type: String },
+    email: { type: String, required: true, unique: true },
+    bloodGroup: {
+      type: String,
+      enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'],
+    },
+    contactNo: { type: String, required: true },
+    emergencyContactNo: { type: String, required: true },
+    currentAddress: { type: String, required: true },
+    permanentAddress: { type: String, required: true },
+    gurdian: {
+      type: GurdianSchema,
+      required: true,
+    },
+    localGurdian: {
+      type: LocalGurdianSchema,
+      required: true,
+    },
+    profileImage: { type: String },
+    active: {
+      type: String,
+      enum: ['active', 'blocked'],
+      default: 'active',
+    },
+    isDeleted: { type: Boolean, default: false },
   },
-  gender: {
-    type: String,
-    enum: ['Female', 'Male'],
-    required: true,
+  {
+    toJSON: {
+      virtuals: true,
+    },
   },
-  dateOfBirth: { type: String },
-  email: { type: String, required: true, unique: true },
-  bloodGroup: {
-    type: String,
-    enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'],
-  },
-  contactNo: { type: String, required: true },
-  emergencyContactNo: { type: String, required: true },
-  currentAddress: { type: String, required: true },
-  permanentAddress: { type: String, required: true },
-  gurdian: {
-    type: GurdianSchema,
-    required: true,
-  },
-  localGurdian: {
-    type: LocalGurdianSchema,
-    required: true,
-  },
-  profileImage: { type: String },
-  active: {
-    type: String,
-    enum: ['active', 'blocked'],
-    default: 'active',
-  },
-  isDeleted: { type: Boolean, default: false },
+);
+
+//virtual
+StudentSchema.virtual('fullName').get(function () {
+  return this.name.firstName + ' ' + this.name.lastName;
 });
 
 // pre save middleware/ hooks
