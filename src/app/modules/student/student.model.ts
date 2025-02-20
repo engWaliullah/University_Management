@@ -1,13 +1,11 @@
-import bcript from 'bcrypt';
 import { model, Schema } from 'mongoose';
-import config from '../config';
 import {
   StudentModel,
   TGurdian,
   TLocalGurdian,
   TStudent,
   TUserName,
-} from './student/student.interface';
+} from './student.interface';
 
 const NameSchema = new Schema<TUserName>({
   firstName: {
@@ -50,7 +48,14 @@ const LocalGurdianSchema = new Schema<TLocalGurdian>({
 const StudentSchema = new Schema<TStudent, StudentModel>(
   {
     id: { type: String },
-    password: { type: String, required: true },
+    user: {
+      type: Schema.Types.ObjectId,
+      required: [true, 'User id must be required'],
+      unique: true,
+      ref: 'User',
+
+    },
+  
     name: {
       type: NameSchema,
       required: true,
@@ -79,11 +84,7 @@ const StudentSchema = new Schema<TStudent, StudentModel>(
       required: true,
     },
     profileImage: { type: String },
-    active: {
-      type: String,
-      enum: ['active', 'blocked'],
-      default: 'active',
-    },
+  
     isDeleted: { type: Boolean, default: false },
   },
   {
@@ -98,24 +99,6 @@ StudentSchema.virtual('fullName').get(function () {
   return this.name.firstName + ' ' + this.name.lastName;
 });
 
-// pre save middleware/ hooks
-StudentSchema.pre('save', async function (next) {
-  // console.log(this, 'pre hook: we will save the data');
-
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const user = this;
-  user.password = await bcript.hash(
-    user.password,
-    Number(config.bcript_salt_rounds),
-  );
-  next();
-});
-
-// post save middleware/ hooks
-StudentSchema.post('save', function (doc, next) {
-  doc.password = ' ';
-  next();
-});
 
 // query middleware
 StudentSchema.pre('find', function (next) {
