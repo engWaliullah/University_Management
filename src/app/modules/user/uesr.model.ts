@@ -51,7 +51,7 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-// post save middleware/ hooks
+// post save middleware/ hooks:: send empty password
 userSchema.post('save', function (doc, next) {
   doc.password = ' ';
   next();
