@@ -1,23 +1,25 @@
 import cors from 'cors';
-import express, { Application, NextFunction, Request, Response } from 'express';
-import config from './app/config';
-import { UserRoute } from './app/modules/user/user.route';
-import { StudentRoutes } from './app/modules/student/srudent.router';
+import express, { Application, Request, Response } from 'express';
 import globalErrorHanalar from './app/middlewares/globalErrorHanalar';
+import notFound from './app/middlewares/notFound';
+import router from './app/routes';
 const app: Application = express();
 
 //parsers
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
 
 // application routes
-app.use('/api/v1/students', StudentRoutes);
-app.use('/api/v1/users', UserRoute);
+app.use('/api/v1', router);
 
-app.get('/', (req: Request, res: Response) => {
-  res.send(config.database_url);
-});
+const test = (req: Request, res: Response) => {
+  const a = 'test';
+  res.send(a);
+};
+
+app.get('/', test);
 
 app.use(globalErrorHanalar);
+app.use(notFound);
 
 export default app;
