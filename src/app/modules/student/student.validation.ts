@@ -45,7 +45,7 @@ const CreateStudentValidationSchema = z.object({
     student: z.object({
       name: NameValidationSchema,
       gender: z.enum(['Female', 'Male']),
-      dateOfBirth: z.date().optional(),
+      dateOfBirth: z.string().optional(),
       email: z.string().email({ message: 'Invalid email format' }),
       bloodGroup: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-']).optional(),
       contactNo: z.string().min(1, { message: 'Contact Number is required' }),
@@ -60,6 +60,7 @@ const CreateStudentValidationSchema = z.object({
         .min(1, { message: 'Permanent Address is required' }),
       gurdian: GurdianValidationSchema,
       localGurdian: LocalGurdianValidationSchema,
+      admissionSemester: z.string(),
       profileImage: z.string().optional(),
     }),
   }),

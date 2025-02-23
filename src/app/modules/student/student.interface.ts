@@ -27,7 +27,7 @@ export type TStudent = {
   // password: string;
   name: TUserName;
   gender: 'Male' | 'Female';
-  dateOfBirth?: Date;
+  dateOfBirth?: string;
   email: string;
   bloodGroup?: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-';
   contactNo: string;
@@ -37,6 +37,7 @@ export type TStudent = {
   gurdian: TGurdian;
   localGurdian: TLocalGurdian;
   profileImage?: string;
+  admissionSemester: Types.ObjectId;
   isDeleted: boolean;
 };
 

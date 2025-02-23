@@ -8,6 +8,7 @@ const userSchema = new Schema<TUser>(
     id: {
       type: String,
       required: true,
+      unique: true,
     },
     password: {
       type: String,
@@ -36,8 +37,6 @@ const userSchema = new Schema<TUser>(
   },
 );
 
-
-
 // pre save middleware/ hooks
 userSchema.pre('save', async function (next) {
   // console.log(this, 'pre hook: we will save the data');
@@ -56,8 +55,5 @@ userSchema.post('save', function (doc, next) {
   doc.password = ' ';
   next();
 });
-
-
-
 
 export const User = model<TUser>('User', userSchema);
