@@ -46,9 +46,8 @@ const StudentSchema = new Schema<TStudent, StudentModel>(
       required: [true, 'User id must be required'],
       unique: true,
       ref: 'User',
-
     },
-  
+
     name: {
       type: NameSchema,
       required: true,
@@ -58,7 +57,7 @@ const StudentSchema = new Schema<TStudent, StudentModel>(
       enum: ['Female', 'Male'],
       required: true,
     },
-    dateOfBirth: { type: String },
+    dateOfBirth: { type: Date },
     email: { type: String, required: true, unique: true },
     bloodGroup: {
       type: String,
@@ -77,7 +76,7 @@ const StudentSchema = new Schema<TStudent, StudentModel>(
       required: true,
     },
     profileImage: { type: String },
-  
+
     isDeleted: { type: Boolean, default: false },
   },
   {
@@ -91,7 +90,6 @@ const StudentSchema = new Schema<TStudent, StudentModel>(
 StudentSchema.virtual('fullName').get(function () {
   return this.name.firstName + ' ' + this.name.lastName;
 });
-
 
 // query middleware
 StudentSchema.pre('find', function (next) {

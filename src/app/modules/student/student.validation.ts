@@ -38,28 +38,33 @@ const LocalGurdianValidationSchema = z.object({
   address: z.string().min(1, { message: 'Local Gurdian Address is required' }),
 });
 
-// Zod validation for StudentValidationSchema
-const StudentValidationSchema = z.object({
-  id: z.string(),
-  password: z.string().min(8, { message: 'Password is required' }),
-  name: NameValidationSchema,
-  gender: z.enum(['Female', 'Male']),
-  dateOfBirth: z.string().optional(),
-  email: z.string().email({ message: 'Invalid email format' }),
-  bloodGroup: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-']).optional(),
-  contactNo: z.string().min(1, { message: 'Contact Number is required' }),
-  emergencyContactNo: z
-    .string()
-    .min(1, { message: 'Emergency Contact Number is required' }),
-  currentAddress: z.string().min(1, { message: 'Current Address is required' }),
-  permanentAddress: z
-    .string()
-    .min(1, { message: 'Permanent Address is required' }),
-  gurdian: GurdianValidationSchema,
-  localGurdian: LocalGurdianValidationSchema,
-  profileImage: z.string().optional(),
-  active: z.enum(['active', 'blocked']).default('active'),
-  isDeleted: z.boolean().default(false),
+// Zod validation for CreateStudentValidationSchema
+const CreateStudentValidationSchema = z.object({
+  body: z.object({
+    password: z.string().min(8, { message: 'Password is required' }),
+    student: z.object({
+      name: NameValidationSchema,
+      gender: z.enum(['Female', 'Male']),
+      dateOfBirth: z.date().optional(),
+      email: z.string().email({ message: 'Invalid email format' }),
+      bloodGroup: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-']).optional(),
+      contactNo: z.string().min(1, { message: 'Contact Number is required' }),
+      emergencyContactNo: z
+        .string()
+        .min(1, { message: 'Emergency Contact Number is required' }),
+      currentAddress: z
+        .string()
+        .min(1, { message: 'Current Address is required' }),
+      permanentAddress: z
+        .string()
+        .min(1, { message: 'Permanent Address is required' }),
+      gurdian: GurdianValidationSchema,
+      localGurdian: LocalGurdianValidationSchema,
+      profileImage: z.string().optional(),
+    }),
+  }),
 });
 
-export default StudentValidationSchema;
+export const StudentValidations = {
+  CreateStudentValidationSchema,
+};
