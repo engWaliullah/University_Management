@@ -6,7 +6,7 @@ const globalErrorHanalar = (
   res: Response,
   next: NextFunction,
 ) => {
-  let statusCode = 500;
+  let statusCode = err.statusCode || 500;
   let message = err.message || 'Something went wrong';
   error: err;
 
