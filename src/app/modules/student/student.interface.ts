@@ -38,6 +38,7 @@ export type TStudent = {
   localGurdian: TLocalGurdian;
   profileImage?: string;
   admissionSemester: Types.ObjectId;
+  admissionDepartment: Types.ObjectId;
   isDeleted: boolean;
 };
 
