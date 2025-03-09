@@ -3,6 +3,8 @@ import mongoose from 'mongoose';
 import { Student } from './student.model';
 import AppError from '../../errors/AppError';
 import { User } from '../user/uesr.model';
+import { TStudent } from './student.interface';
+import { object } from 'joi';
 
 const getAllStudentsFromDB = async () => {
   const result = await Student.find()
@@ -29,6 +31,34 @@ const getSingleStudentFromDB = async (id: string) => {
   });
   return result;
 };
+
+
+const updateSingleStudentFromDB = async (id: string, payload: Partial<TStudent>) => {
+
+  const {name, gurdian, localGurdian, ...remainingStudentData} = payload;
+
+  const modifiedUpdatedData : Record<string, unknown> = {...remainingStudentData };
+
+  if (name && Object.keys(name).length ) {
+    for(const [key, value] of Object.entries(name))
+      modifiedUpdatedData[`name.${key}`] = value
+  }
+
+
+  if (gurdian && Object.keys(gurdian).length) {
+    for(const [key, value] of Object.entries(gurdian))
+      modifiedUpdatedData[`gurdian.${key}`] = value
+  }
+      
+  if (localGurdian && Object.keys(localGurdian).length) {
+    for(const [key, value] of Object.entries(localGurdian))
+      modifiedUpdatedData[`localGurdian.${key}`] = value
+  }
+
+  const result = await Student.findOneAndUpdate({id}, modifiedUpdatedData, {new: true, runValidators: true})
+  return result;
+  };
+
 
 const deleteSingleStudentFromDB = async (id: string) => {
 
@@ -59,6 +89,7 @@ return deletedStudent;
 } catch (error) {
   await session.abortTransaction();
   await session.endSession()
+  throw new Error('Failed to delete student');
 }
 };
 
@@ -66,5 +97,6 @@ export const StudentServices = {
 
   getAllStudentsFromDB,
   getSingleStudentFromDB,
+  updateSingleStudentFromDB,
   deleteSingleStudentFromDB,
 };
