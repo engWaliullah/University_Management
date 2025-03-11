@@ -21,19 +21,23 @@ const globalErrorHanalar : ErrorRequestHandler = (
     }
   ]
 
-  // check if the error is a zod error
+
   if (err instanceof ZodError) {
     const simplifiedError = handleZodError(err);
     statusCode = simplifiedError?.statusCode;
     message = simplifiedError?.message;
     errorSources = simplifiedError?.errorSources;
+  } else if(err?.name === 'ValidationError'){
+    const handleValidationError = ''
+    
   }
 
   return res.status(statusCode).json({
     success: false,
     message,
     errorSources,
-    stack: config.NODE_ENV === 'development' ? err.stack : undefined,
+    err,
+    stack: config.NODE_ENV === 'developmentt' ? err.stack : undefined,
   });
 };
 
