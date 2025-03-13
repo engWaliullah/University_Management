@@ -2,6 +2,7 @@ import mongoose from 'mongoose'
 import app from './app'
 import config from './app/config'
 import { Server } from 'http'
+import { x } from 'joi'
 
 let server : Server
 
@@ -38,4 +39,3 @@ process.on('uncaughtException', () => {
 })
 
 
-// Promise.reject()
