@@ -12,7 +12,8 @@ app.use(express.json());
 // application routes
 app.use('/api/v1', router);
 
-const test = (req: Request, res: Response) => {
+const test = async (req: Request, res: Response) => {
+
   const a = 'test';
   res.send(a);
 };
