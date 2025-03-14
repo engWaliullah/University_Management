@@ -1,24 +1,24 @@
-import httpStatus from 'http-status';
 import mongoose from 'mongoose';
+import httpStatus from 'http-status';
 import { Student } from './student.model';
-import AppError from '../../errors/AppError';
 import { User } from '../user/uesr.model';
+import AppError from '../../errors/AppError';
 import { TStudent } from './student.interface';
-
-
-const studentSearchableFields = ['email', 'name.firstName', 'name.lastName', 'presentAddress']
+import QuireBuilder from '../../builder/QueryBuilder';
+import { studentSearchableFields } from './student.constant';
 
 
 const getAllStudentsFromDB = async (query : Record<string, unknown>) => {
 
+
+  /*
+
   const queryObj = { ...query };
 
-  const excludedFields = ['searchTerm','sort', 'limit', 'page'];
+  const excludedFields = ['searchTerm','sort', 'limit', 'page', 'fields'];
   excludedFields.forEach((el) => delete queryObj[el]);
 
-console.log({queryObj}, {query});
-
-  
+  console.log({queryObj}, {query});
 
   let searchTerm = ''
   if (query?.searchTerm) {
@@ -47,7 +47,6 @@ const filterQuiery = searchQuery.find(queryObj)
   }
 
   const sortQuery = filterQuiery.sort(sort)
-
   
   let limit = 1;
   let page = 1
@@ -55,23 +54,50 @@ const filterQuiery = searchQuery.find(queryObj)
 
   if (query?.limit) {
     limit = Number(query?.limit)
-    }
-
+  }
 
   if (query?.page) {
     page = Number(query?.page)
     skip = (page - 1) * limit
-    }
+  }
+
+  const paginateQuery = sortQuery.skip(skip);
+
+  let fields = '-__v'
+if (query.fields) {
+  fields = (query.fields as string).split(',').join(' ');
+
+}
+
+const fieldQuery = paginateQuery.select(fields);
+const limitQuery = await fieldQuery.limit(limit);
+
+return limitQuery;
+
+*/
 
 
-    const paginateQuery = sortQuery.skip(skip);
-  
+const studentQuery = new QuireBuilder(Student.find(), query).search(studentSearchableFields).filter().sort().paginate().fields();
+const result = await studentQuery.modelQuery;
+return result;
 
-  const limitQuery = await paginateQuery.limit(limit);
-
-
-  return limitQuery;
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const getSingleStudentFromDB = async (id: string) => {
   // const result = await Student.findOne({ id });
