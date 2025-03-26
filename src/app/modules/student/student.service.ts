@@ -77,32 +77,28 @@ return limitQuery;
 */
 
 
-const studentQuery = new QuireBuilder(Student.find(), query).search(studentSearchableFields).filter().sort().paginate().fields();
+const studentQuery = new QuireBuilder(Student.find()
+.populate('admissionSemester')
+.populate({
+  path: 'admissionDepartment',
+  populate: {
+  path: 'academicFaculty',
+  }
+}), 
+query)
+.search(studentSearchableFields)
+.filter().sort().paginate().fields();
+
 const result = await studentQuery.modelQuery;
 return result;
 
 };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 const getSingleStudentFromDB = async (id: string) => {
   // const result = await Student.findOne({ id });
   // const result = await Student.aggregate([{ $match: { id } }]);
-  const result = await Student.findOne({ id })
+  const result = await Student.findById( id )
   .populate('admissionSemester')
   .populate({
     path: 'admissionDepartment',
@@ -136,9 +132,9 @@ const updateSingleStudentFromDB = async (id: string, payload: Partial<TStudent>)
       modifiedUpdatedData[`localGurdian.${key}`] = value
   }
 
-  const result = await Student.findOneAndUpdate({id}, modifiedUpdatedData, {new: true, runValidators: true})
+  const result = await Student.findByIdAndUpdate( id , modifiedUpdatedData, {new: true, runValidators: true})
   return result;
-  };
+};
 
 
 const deleteSingleStudentFromDB = async (id: string) => {
@@ -150,14 +146,16 @@ try {
   
   session.startTransaction()
 
-  const deletedStudent = await Student.findOneAndUpdate({ id }, { isDeleted: true }, {new: true, session});
+  const deletedStudent = await Student.findByIdAndUpdate( id , { isDeleted: true }, {new: true, session});
 
   if (!deletedStudent) {
     throw new AppError(httpStatus.BAD_REQUEST, 'Failed to delete student');
   }
 
+  const userId = deletedStudent.user
+
   // deleted user 
-  const deletedUser = await User.findOneAndUpdate({id}, {isDeleted: true}, {new: true, session});
+  const deletedUser = await User.findByIdAndUpdate(userId, {isDeleted: true}, {new: true, session});
 if (!deletedUser) {
   throw new AppError(httpStatus.BAD_REQUEST, 'Failed to delete user');
 }
