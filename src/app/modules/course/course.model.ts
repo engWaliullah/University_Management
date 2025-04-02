@@ -13,7 +13,7 @@ const preRequisiteCoursesSchema = new Schema<TPreRequisiteCourses>({
     }
 }, 
 {
-    _id: false
+    _id: false,
 }
 )
 
