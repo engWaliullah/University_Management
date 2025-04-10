@@ -5,6 +5,7 @@ import { StudentRoutes } from '../modules/student/srudent.router';
 import { AcademicFacultyRoutes } from '../modules/academicFaculty/academicFaculty.route';
 import { AcademicSemesterRoutes } from './../modules/academicSemester/academicSemester.router';
 import { AcademicDepartmentRoutes } from '../modules/academicDepartment/academicDepartment.route';
+import { semesterRegistrationRoute } from '../modules/semesterRegistration/semesterRegistration.route';
 
 const router = Router();
 
@@ -32,6 +33,10 @@ const moduleRoutes = [
   {
     path: '/courses',
     route: CourseRoutes,
+  },
+  {
+    path: '/semester-registrations',
+    route: semesterRegistrationRoute,
   },
 ];
 
