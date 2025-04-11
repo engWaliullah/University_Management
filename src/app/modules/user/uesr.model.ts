@@ -1,9 +1,9 @@
 import bcript from 'bcrypt';
 import { Schema, model } from 'mongoose';
-import { TUser } from './user.interface';
+import { TUser, UserModel } from './user.interface';
 import config from '../../config';
 
-const userSchema = new Schema<TUser>(
+const userSchema = new Schema<TUser, UserModel>(
   {
     id: {
       type: String,
@@ -56,4 +56,9 @@ userSchema.post('save', function (doc, next) {
   next();
 });
 
-export const User = model<TUser>('User', userSchema);
+
+userSchema.static.isUserExistsByCustomId = async function (id: string) {
+    return await User.findOne({id})
+}
+
+export const User = model<TUser, UserModel>('User', userSchema);

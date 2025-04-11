@@ -1,4 +1,6 @@
-export type TUser = {
+import { Model } from "mongoose";
+
+export interface TUser {
   id: string;
   password: string;
   needPasswordChange: boolean;
@@ -7,3 +9,7 @@ export type TUser = {
   status: 'in-progress' | 'block';
 };
 
+export interface UserModel extends Model<TUser> {
+  // myStaticMethod(): number;
+  isUserExistsByCustomId(id: string) : Promise<TUser>
+}
