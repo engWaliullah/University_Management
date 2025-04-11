@@ -1,4 +1,4 @@
-import bcript from 'bcrypt';
+import bcrypt from 'bcrypt';
 import { Schema, model } from 'mongoose';
 import { TUser, UserModel } from './user.interface';
 import config from '../../config';
@@ -43,7 +43,7 @@ userSchema.pre('save', async function (next) {
 
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const user = this;
-  user.password = await bcript.hash(
+  user.password = await bcrypt.hash(
     user.password,
     Number(config.bcript_salt_rounds),
   );
@@ -56,9 +56,12 @@ userSchema.post('save', function (doc, next) {
   next();
 });
 
+userSchema.statics.isUserExistsByCustomId = async function (id: string) {
+  return await User.findOne({ id });
+};
 
-userSchema.static.isUserExistsByCustomId = async function (id: string) {
-    return await User.findOne({id})
-}
+userSchema.statics.isPasswordMatched = async function (plainPassword: string, hashPassword: string) {
+  return await bcrypt.compare(plainPassword, hashPassword);
+};
 
 export const User = model<TUser, UserModel>('User', userSchema);
