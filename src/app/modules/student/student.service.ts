@@ -78,6 +78,7 @@ return limitQuery;
 
 
 const studentQuery = new QuireBuilder(Student.find()
+.populate('user')
 .populate('admissionSemester')
 .populate({
   path: 'admissionDepartment',
