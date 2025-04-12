@@ -5,6 +5,7 @@ import { User } from './../user/uesr.model';
 import AppError from '../../errors/AppError';
 import { TLoginUser } from './Auth.interface';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import { createToken } from './Auth.utils';
 
 const loginUser = async (payload: TLoginUser) => {
   // check if the user is exists in the database
@@ -38,12 +39,13 @@ const loginUser = async (payload: TLoginUser) => {
     role: user.role,
   };
 
-  const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
-    expiresIn: '10d',
-  });
+  const accessToken = createToken(jwtPayload, config.jwt_access_secret as string, config.jwt_access_expires_in as string)
+  const refreshToken = createToken(jwtPayload, config.jwt_refresh_secret as string, config.jwt_refresh_expires_in as string)
+
 
   return {
     accessToken,
+    refreshToken,
     needsPasswordChange: user?.needPasswordChange,
   };
 };
