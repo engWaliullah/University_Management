@@ -5,7 +5,7 @@ import { User } from './../user/uesr.model';
 import AppError from '../../errors/AppError';
 import { TLoginUser } from './Auth.interface';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import { createToken } from './Auth.utils';
+import { createToken, verifyToken } from './Auth.utils';
 import { sendEmail } from '../../../sendEmail';
 
 const loginUser = async (payload: TLoginUser) => {
@@ -103,10 +103,7 @@ const changePassword = async (
 
 const refreshToken = async (token: string) => {
   // check if the token is valid
-  const decoded = jwt.verify(
-    token,
-    config.jwt_refresh_secret as string,
-  ) as JwtPayload;
+  const decoded = verifyToken(token, config.jwt_access_secret as string)
 
   const { userId, iat } = decoded;
 
@@ -207,10 +204,7 @@ const resetPassword = async (
   }
 
   // check if the token is valid
-  const decoded = jwt.verify(
-    token,
-    config.jwt_access_secret as string,
-  ) as JwtPayload;
+  const decoded = verifyToken(token, config.jwt_access_secret as string) 
 
   if (payload?.id !== decoded?.userId) {
     throw new AppError(httpStatus.FORBIDDEN, 'You are not forbidden !!');

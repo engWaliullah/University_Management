@@ -1,22 +1,22 @@
-import httpStatus from 'http-status';
-import mongoose from 'mongoose';
 import config from '../../config';
-import { AcademicSemester } from '../academicSemester/academicSemester.model';
-import { TStudent } from '../student/student.interface';
-import { Student } from '../student/student.model';
 import { User } from './uesr.model';
+import httpStatus from 'http-status';
+import mongoose, { get } from 'mongoose';
 import { TUser } from './user.interface';
+import AppError from '../../errors/AppError';
+import { Admin } from '../adminnn/admin.model';
+import { verifyToken } from '../Auth/Auth.utils';
+import { Student } from '../student/student.model';
+import { Faculty } from '../faculty/faculty.model';
+import { TFaculty } from '../faculty/faculty.interface';
+import { TStudent } from '../student/student.interface';
 import {
   generateAdminId,
   generateStudentId,
   generateFacultyId,
 } from './user.utils';
-import AppError from '../../errors/AppError';
-import { TFaculty } from '../faculty/faculty.interface';
+import { AcademicSemester } from '../academicSemester/academicSemester.model';
 import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
-import { Faculty } from '../faculty/faculty.model';
-import { Admin } from '../adminnn/admin.model';
-
 
 const createUserIntoDB = async (password: string, payload: TStudent) => {
   // create a user object
@@ -182,8 +182,28 @@ const createAdminIntoDB = async (password: string, payload: TFaculty) => {
   }
 };
 
+const getMeFromDB = async (token: string) => {
+  const decoded = verifyToken(token, config.jwt_access_secret as string);
+  const { userId, role } = decoded;
+ 
+  let result = null
+
+  if (role === "admin") {
+    result = await Admin.findOne({id: userId})
+  }
+  if (role === "faculty") {
+    result = await Faculty.findOne({id: userId})
+  }
+  if (role === "student") {
+    result = await Student.findOne({id: userId})
+  }
+
+  return result
+};
+
 export const UserServices = {
   createUserIntoDB,
   createFacultyIntoDB,
   createAdminIntoDB,
+  getMeFromDB,
 };

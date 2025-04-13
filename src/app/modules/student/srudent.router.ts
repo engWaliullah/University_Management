@@ -2,6 +2,7 @@ import express from 'express';
 import { StudentController } from './student.controller';
 import validateRequest from '../../middlewares/validateRequest';
 import { StudentValidations } from './student.validation';
+import auth from '../../middlewares/auth';
 
 const router = express.Router();
 
@@ -11,7 +12,7 @@ router.patch(
   validateRequest(StudentValidations.UpdateStudentValidationSchema),
   StudentController.updateSingleStudentController,
 );
-router.get('/:studentId', StudentController.getSingleStudentController);
+router.get('/:studentId', auth("admin", "faculty", "student"), StudentController.getSingleStudentController);
 router.delete('/:studentId', StudentController.deleteSingleStudentController);
 
 export const StudentRoutes = router;
