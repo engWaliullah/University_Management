@@ -76,7 +76,7 @@ const updateLocalGurdianValidationSchema = z.object({
 // Zod validation for CreateStudentValidationSchema
 const CreateStudentValidationSchema = z.object({
   body: z.object({
-    password: z.string().min(8, { message: 'Password is required' }),
+    password: z.string().min(8, { message: 'Password is required' }).optional(),
     student: z.object({
       name: createNameValidationSchema,
       gender: z.enum(['Female', 'Male']),

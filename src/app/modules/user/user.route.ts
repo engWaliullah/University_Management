@@ -1,21 +1,32 @@
-import express from 'express';
-import { UserControllers } from './user.controller';
-import validateRequest from '../../middlewares/validateRequest';
-import { StudentValidations } from '../student/student.validation';
-import { createFacultyValidationSchema } from '../faculty/faculty.validation';
-import { createAdminValidationSchema } from '../adminnn/admin.validation';
+import express, { NextFunction, Request, Response } from 'express';
 import auth from '../../middlewares/auth';
 import { USER_ROLE } from './user.constant';
 import { userValidation } from './user.validation';
+import { UserControllers } from './user.controller';
+import { upload } from '../../utils/sendImageToCloudinary';
+import validateRequest from '../../middlewares/validateRequest';
+import { StudentValidations } from '../student/student.validation';
+import { createAdminValidationSchema } from '../adminnn/admin.validation';
+import {
+  createFacultyValidationSchema,
+  studentValidations,
+} from '../faculty/faculty.validation';
 
 const router = express.Router();
 
 router.post(
   '/create-student',
-  auth(USER_ROLE.admin),
-  validateRequest(StudentValidations.CreateStudentValidationSchema),
+  // auth(USER_ROLE.admin),
+  upload.single('file'),
+  (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.body);
+    req.body = JSON.parse(req.body.data);
+    next();
+  },
+  validateRequest(studentValidations.createFacultyValidationSchema),
   UserControllers.createStudent,
 );
+
 
 router.post(
   '/create-faculty',
@@ -31,11 +42,7 @@ router.post(
   UserControllers.createAdmin,
 );
 
-router.get(
-  '/me',
-  auth("admin", "faculty", "student"),
-  UserControllers.getMe,
-);
+router.get('/me', auth('admin', 'faculty', 'student'), UserControllers.getMe);
 
 router.post(
   '/change-status/:id',
@@ -43,6 +50,5 @@ router.post(
   validateRequest(userValidation.changeStatusValidationSchema),
   UserControllers.changeStatus,
 );
-  
 
 export const UserRoute = router;

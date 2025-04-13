@@ -17,8 +17,13 @@ import {
 } from './user.utils';
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
 import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
+import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 
-const createUserIntoDB = async (password: string, payload: TStudent) => {
+const createStudentIntoDB = async (
+  file: any,
+  password: string,
+  payload: TStudent,
+) => {
   // create a user object
   const userData: Partial<TUser> = {};
 
@@ -27,8 +32,8 @@ const createUserIntoDB = async (password: string, payload: TStudent) => {
 
   //set student role
   userData.role = 'student';
-  //set student email
-  userData.email = payload?.email;
+  // set student email
+  userData.email = payload.email;
 
   // find academic semester info
   const admissionSemester = await AcademicSemester.findById(
@@ -46,6 +51,11 @@ const createUserIntoDB = async (password: string, payload: TStudent) => {
     //set  generated id
     userData.id = await generateStudentId(admissionSemester);
 
+    const imageName = `${userData.id}${payload?.name?.firstName}`;
+    const path = file?.path;
+    //send image to cloudinary
+    const { secure_url } = await sendImageToCloudinary(imageName, path);
+
     // create a user (transaction-1)
     const newUser = await User.create([userData], { session }); // array
 
@@ -56,6 +66,7 @@ const createUserIntoDB = async (password: string, payload: TStudent) => {
     // set id , _id as user
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id; //reference _id
+    payload.profileImage = secure_url;
 
     // create a student (transaction-2)
 
@@ -75,6 +86,7 @@ const createUserIntoDB = async (password: string, payload: TStudent) => {
     throw new Error(err);
   }
 };
+
 
 const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
   // create a user object
@@ -206,7 +218,7 @@ const changeStatus = async (id: string, payload: { status: string }) => {
 };
 
 export const UserServices = {
-  createUserIntoDB,
+  createStudentIntoDB,
   createFacultyIntoDB,
   createAdminIntoDB,
   changeStatus,
