@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import httpStatus from 'http-status';
 import mongoose from 'mongoose';
-import QueryBuilder from '../../builder/QueryBuilder';
+import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
+import QueryBuilder from '../../builder/QueryBuilder';
 
 import { FacultySearchableFields } from './faculty.constant';
 import { TFaculty } from './faculty.interface';
@@ -26,7 +26,6 @@ const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
 
 const getSingleFacultyFromDB = async (id: string) => {
   const result = await Faculty.findById(id).populate('academicDepartment');
-
   return result;
 };
 

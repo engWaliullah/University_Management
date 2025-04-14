@@ -75,7 +75,7 @@ const StudentSchema = new Schema<TStudent, StudentModel>(
       type: LocalGurdianSchema,
       required: true,
     },
-    profileImage: { type: String },
+    profileImg: { type: String },
     admissionSemester: {
       type: Schema.Types.ObjectId,
       ref: 'AcademicSemester',

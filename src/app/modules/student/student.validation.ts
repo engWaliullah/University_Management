@@ -97,7 +97,7 @@ const CreateStudentValidationSchema = z.object({
       localGurdian: createLocalGurdianValidationSchema,
       admissionSemester: z.string(),
       admissionDepartment: z.string(),
-      profileImage: z.string().optional(),
+      profileImg: z.string().optional(),
     }),
   }),
 });
@@ -124,7 +124,7 @@ const UpdateStudentValidationSchema = z.object({
       localGurdian: updateLocalGurdianValidationSchema.optional(),
       admissionSemester: z.string().optional(),
       admissionDepartment: z.string().optional(),
-      profileImage: z.string().optional(),
+      profileImg: z.string().optional(),
     }),
   }),
 });
