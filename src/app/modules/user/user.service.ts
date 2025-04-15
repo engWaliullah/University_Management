@@ -15,14 +15,15 @@ import {
   generateStudentId,
   generateFacultyId,
 } from './user.utils';
+import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
 import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
-import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 
 const createStudentIntoDB = async (
   file: any,
   password: string,
   payload: TStudent,
+  
 ) => {
   // create a user object
   const userData: Partial<TUser> = {};
@@ -51,7 +52,7 @@ const createStudentIntoDB = async (
     //set  generated id
     userData.id = await generateStudentId(admissionSemester);
 
-    const imageName = `${userData.id}${payload?.name?.firstName}`;
+    const imageName = `${userData?.id}${payload?.name?.firstName}`;
     const path = file?.path;
     //send image to cloudinary
     const { secure_url } = await sendImageToCloudinary(imageName, path);

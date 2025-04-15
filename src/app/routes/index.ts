@@ -1,14 +1,15 @@
 import { Router } from 'express';
 import { UserRoute } from '../modules/user/user.route';
+import { AuthRoutes } from '../modules/Auth/Auth.route';
 import { CourseRoutes } from '../modules/course/course.route';
+import { FacultyRoutes } from '../modules/faculty/faculty.route';
 import { StudentRoutes } from '../modules/student/srudent.router';
+import { offeredCourseRoutes } from '../modules/OfferedCourse/OfferedCourse.route';
+import { EnrolledCourseRoutes } from '../modules/EnrolledCourse/enrolledCourse.route';
 import { AcademicFacultyRoutes } from '../modules/academicFaculty/academicFaculty.route';
 import { AcademicSemesterRoutes } from './../modules/academicSemester/academicSemester.router';
 import { AcademicDepartmentRoutes } from '../modules/academicDepartment/academicDepartment.route';
 import { semesterRegistrationRoute } from '../modules/semesterRegistration/semesterRegistration.route';
-import { offeredCourseRoutes } from '../modules/OfferedCourse/OfferedCourse.route';
-import { AuthRoutes } from '../modules/Auth/Auth.route';
-import { FacultyRoutes } from '../modules/faculty/faculty.route';
 
 const router = Router();
 
@@ -52,6 +53,10 @@ const moduleRoutes = [
   {
     path: '/auth',
     route: AuthRoutes,
+  },
+  {
+    path: '/enrolled-courses',
+    route: EnrolledCourseRoutes,
   },
 ];
 
