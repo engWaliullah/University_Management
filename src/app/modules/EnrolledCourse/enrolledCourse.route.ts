@@ -4,12 +4,11 @@ import validateRequest from '../../middlewares/validateRequest';
 import { EnrolledCourseValidations } from './enrolledCourse.validation';
 import { EnrolledCourseControllers } from './enrolledCourse.controller';
 
-
 const router = express.Router();
 
 router.post(
   '/create-enrolled-course',
-//   auth('student'),
+  auth('student'),
   validateRequest(
     EnrolledCourseValidations.createEnrolledCourseValidationZodSchema,
   ),
