@@ -13,6 +13,7 @@ import { SemesterRegistration } from '../semesterRegistration/semesterRegistrati
 import { Course } from '../course/course.model';
 import { Faculty } from '../faculty/faculty.model';
 import { object } from 'joi';
+import { calculateGradeAndPoint } from './enrolledCourse.utils';
 
 const createEnrolledCourseIntoDB = async (
   userId: string,
@@ -185,9 +186,26 @@ const updateEnrolledCourseMarksIntoDB = async (
     throw new AppError(httpStatus.FORBIDDEN, 'You are forbidden!!!');
   }
 
-  const modifiedData: Record<string, unknown> = {
+  let modifiedData: Record<string, unknown> = {
     ...courseMarks,
   };
+
+  if (courseMarks?.finalTerm) {
+    const { classTest1, classTest2, midTerm, finalTerm } =
+      isCourseBelongToFaculty.courseMarks;
+
+    const totalMarks =
+      Math.ceil(classTest1 * 0.1) +
+      Math.ceil(midTerm * 0.3) +
+      Math.ceil(classTest2 * 0.1) +
+      Math.ceil(finalTerm * 0.5);
+
+    const result = calculateGradeAndPoint(totalMarks);
+    
+    modifiedData.grade = result.grade;
+    modifiedData.gradePoints = result.gradePoint;
+    modifiedData.isCompleted= true;
+  }
 
   if (courseMarks && Object.keys(courseMarks).length) {
     for (const [key, value] of Object.entries(courseMarks)) {
@@ -197,13 +215,13 @@ const updateEnrolledCourseMarksIntoDB = async (
 
   const result = await EnrolledCourse.findByIdAndUpdate(
     isCourseBelongToFaculty._id,
+    modifiedData,
     {
       new: true,
     },
   );
 
-  return result
-
+  return result;
 };
 
 export const EnrolledCourseServices = {
