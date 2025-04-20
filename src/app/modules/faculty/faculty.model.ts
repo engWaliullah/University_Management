@@ -76,11 +76,16 @@ const facultySchema = new Schema<TFaculty, FacultyModel>(
       type: String,
       required: [true, 'Permanent address is required'],
     },
-    profileImg: { type: String },
+    profileImage: { type: String, default: ''},
     academicDepartment: {
       type: Schema.Types.ObjectId,
-      required: [true, 'User id is required'],
-      ref: 'User',
+      required: [true, 'Academic Departmenet id is required'],
+      ref: 'AcademicDepartmenet',
+    },
+    academicFaculty: {
+      type: Schema.Types.ObjectId,
+      // required: [true, 'Academic Facuty id is required'],
+      ref: 'AcademicFaculty',
     },
     isDeleted: {
       type: Boolean,
@@ -94,11 +99,6 @@ const facultySchema = new Schema<TFaculty, FacultyModel>(
   },
 );
 
-// facultySchema.virtual('doniamoFEmial').get(function(){
-//     const email = this.email;
-//     const emailParts = email.split('@');
-//     return emailParts
-// })
 
 // generating full name
 facultySchema.virtual('fullName').get(function () {

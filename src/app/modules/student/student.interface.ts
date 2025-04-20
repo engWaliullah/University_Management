@@ -39,6 +39,7 @@ export type TStudent = {
   profileImg?: string;
   admissionSemester: Types.ObjectId;
   admissionDepartment: Types.ObjectId;
+  academicFaculty: Types.ObjectId;
   isDeleted: boolean;
 };
 
@@ -46,14 +47,3 @@ export type TStudent = {
 export interface StudentModel extends Model<TStudent> {
   isUserExists(id: string): Promise<TStudent | null>;
 }
-
-// creating custom instance methods
-// export type StudentMethods = {
-//   isUserExits(id: string): Promise<TStudent | null>;
-// };
-
-// export type StudentModel = Model<
-//   TStudent,
-//   Record<string, never>,
-//   StudentMethods
-// >;

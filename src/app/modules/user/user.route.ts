@@ -1,25 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import express, { NextFunction, Request, Response } from 'express';
 import auth from '../../middlewares/auth';
+import { USER_ROLE } from './user.constant';
 import { userValidation } from './user.validation';
 import { UserControllers } from './user.controller';
 import { upload } from '../../utils/sendImageToCloudinary';
 import validateRequest from '../../middlewares/validateRequest';
+import express, { NextFunction, Request, Response } from 'express';
+import { StudentValidations } from '../student/student.validation';
 import { createAdminValidationSchema } from '../adminnn/admin.validation';
 import {
   createFacultyValidationSchema,
-  studentValidations,
 } from '../faculty/faculty.validation';
-import { StudentValidations } from '../student/student.validation';
 
 const router = express.Router();
 
 router.post(
   '/create-student',
-  // auth(USER_ROLE.admin),
+  // auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   upload.single('file'),
   (req: Request, res: Response, next: NextFunction) => {
-    // console.log(req.body);
     req.body = JSON.parse(req.body.data);
     next();
   },
@@ -42,21 +41,21 @@ router.post(
 
 router.post(
   '/create-admin',
-  // auth(USER_ROLE.admin),
+  auth(USER_ROLE.admin, USER_ROLE.superAdmin),
   upload.single('file'),
   ((req: Request, res: Response, next: NextFunction) => {
     req.body = JSON.parse(req.body.data)
     next();
-  }),
+  }), 
   validateRequest(createAdminValidationSchema),
   UserControllers.createAdmin,
 );
 
-router.get('/me', auth('admin', 'faculty', 'student'), UserControllers.getMe);
+router.get('/me', auth('admin', 'faculty', 'student', 'superAdmin'), UserControllers.getMe);
 
 router.post(
   '/change-status/:id',
-  auth('admin'),
+  auth('admin', 'superAdmin'),
   validateRequest(userValidation.changeStatusValidationSchema),
   UserControllers.changeStatus,
 );

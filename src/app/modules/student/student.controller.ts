@@ -4,9 +4,7 @@ import httpStatus from 'http-status';
 import { catchAsync } from '../../utils/catchAsync';
 
 const getAllStudentController = catchAsync(async (req, res, next) => {
-  // console.log(req.query);
   const result = await StudentServices.getAllStudentsFromDB(req.query);
-
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -30,7 +28,6 @@ const updateSingleStudentController = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   const {student} = req.body;
   const result = await StudentServices.updateSingleStudentFromDB(id, student);
-  
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -43,7 +40,6 @@ const deleteSingleStudentController = catchAsync(async (req, res, next) => {
   try {
     const { id } = req.params;
     const result = await StudentServices.deleteSingleStudentFromDB(id);
-
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,

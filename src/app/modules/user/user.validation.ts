@@ -8,12 +8,6 @@ const userZodSchema = z.object({
   .max(20, {message: "password must be less than 20 characters"}).optional(),
 
 
-  // needPasswordChange: z.boolean().optional().default(true),
-  // role: z.enum(['admin', 'student', 'faculty']),
-  // status: z.enum(['in-progress', 'block']).default('in-progress'),
-  // isDeleted: z.boolean().optional().default(false),
-
-
 });
 
 const changeStatusValidationSchema = z.object({
