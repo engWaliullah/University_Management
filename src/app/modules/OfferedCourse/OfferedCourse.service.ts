@@ -10,6 +10,7 @@ import { OfferedCourse } from './OfferedCourse.model';
 import { hasTimeConflict } from './OfferedCourse.utils';
 import { Course } from '../course/course.model';
 import { Faculty } from '../faculty/faculty.model';
+import { Student } from '../student/student.model';
 
 const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
   const {
@@ -149,7 +150,15 @@ const getAllOfferedCoursesFromDB = async (query: Record<string, unknown>) => {
 
 const getMyOfferedCoursesFromDB = async (userId: string) => {
 
+const student = await Student.findOne({id: userId});
 
+if (!student) {
+  throw new AppError(httpStatus.NOT_FOUND, 'Student not found');
+}
+// find current ongoing semester 
+const currentOnGoingSemester = await SemesterRegistration.findOne({
+  status: 'ONGOING',
+})
 
   return null
 };
