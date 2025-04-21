@@ -13,6 +13,7 @@ router.post(
   validateRequest(CourseValidations.createCourseValidationSchema),
   CourseControllers.createCourse,
 );
+
 router.get(
   '/:id',
   auth(
@@ -23,6 +24,7 @@ router.get(
   ),
   CourseControllers.getSingleCourse,
 );
+
 router.get(
   '/',
   auth(
@@ -53,6 +55,18 @@ router.put(
   validateRequest(CourseValidations.facultiesWithCourseValidationSchema),
   CourseControllers.assignFacultiesWithCourse,
 );
+
+router.get(
+  '/:courseId/get-faculties',
+  auth(
+    USER_ROLE.superAdmin,
+    USER_ROLE.admin,
+    USER_ROLE.faculty,
+    USER_ROLE.student,
+  ),
+  CourseControllers.getFacultyWithCourse,
+);
+
 router.put(
   '/:courseId/remove-faculties',
   auth(USER_ROLE.superAdmin, USER_ROLE.admin),
